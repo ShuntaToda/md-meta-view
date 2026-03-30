@@ -51,6 +51,17 @@ cli
 
     fs.cpSync(clientPath, absOutDir, { recursive: true });
 
+    // Inject static mode into index.html
+    const indexPath = path.join(absOutDir, "index.html");
+    const html = fs.readFileSync(indexPath, "utf-8");
+    fs.writeFileSync(
+      indexPath,
+      html.replace(
+        "<head>",
+        '<head><script>window.__MD_META_VIEW_MODE__="static"</script>',
+      ),
+    );
+
     // Write meta.json (frontmatter only, no html)
     const meta = entries.map(({ html: _, ...rest }) => rest);
     fs.writeFileSync(

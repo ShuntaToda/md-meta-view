@@ -66,14 +66,20 @@ export async function startServer(targetDir: string, port: number) {
   // Serve built client
   const clientPath = path.resolve(__dirname, "..", "client");
   if (fs.existsSync(clientPath)) {
-    app.use("/*", serveStatic({ root: clientPath }));
-    app.get("*", (c) => {
-      const html = fs.readFileSync(
-        path.join(clientPath, "index.html"),
-        "utf-8",
-      );
-      return c.html(html);
-    });
+    const rawHtml = fs.readFileSync(
+      path.join(clientPath, "index.html"),
+      "utf-8",
+    );
+    const injectedHtml = rawHtml.replace(
+      "<head>",
+      '<head><script>window.__MD_META_VIEW_MODE__="api"</script>',
+    );
+
+    app.use(
+      "/assets/*",
+      serveStatic({ root: clientPath }),
+    );
+    app.get("*", (c) => c.html(injectedHtml));
   }
 
   const server = serve({ fetch: app.fetch, port }, () => {

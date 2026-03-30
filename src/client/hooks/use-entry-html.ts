@@ -1,6 +1,9 @@
 import type { MdEntry } from "@md-meta-view/core";
 import { useEffect, useState } from "react";
 
+const isApi = window.__MD_META_VIEW_MODE__ === "api";
+const base = import.meta.env.BASE_URL;
+
 async function fetchFromApi(id: string): Promise<MdEntry | null> {
   const res = await fetch(`/api/entries/${encodeURIComponent(id)}`);
   if (!res.ok) return null;
@@ -8,13 +11,14 @@ async function fetchFromApi(id: string): Promise<MdEntry | null> {
 }
 
 async function fetchFromStatic(id: string): Promise<MdEntry | null> {
-  const res = await fetch(`${import.meta.env.BASE_URL}entries/${encodeURIComponent(id)}.json`);
+  const res = await fetch(
+    `${base}entries/${encodeURIComponent(id)}.json`,
+  );
   if (!res.ok) return null;
   return res.json();
 }
 
-const fetchEntry =
-  import.meta.env.MODE === "production" ? fetchFromStatic : fetchFromApi;
+const fetchEntry = isApi ? fetchFromApi : fetchFromStatic;
 
 export function useEntryHtml(id: string | null) {
   const [entry, setEntry] = useState<MdEntry | null>(null);

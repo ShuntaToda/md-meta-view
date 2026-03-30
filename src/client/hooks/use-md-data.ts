@@ -1,18 +1,26 @@
 import type { MdMeta } from "@md-meta-view/core";
 import { useCallback, useEffect, useState } from "react";
 
+declare global {
+  interface Window {
+    __MD_META_VIEW_MODE__?: "api" | "static";
+  }
+}
+
+const isApi = window.__MD_META_VIEW_MODE__ === "api";
+const base = import.meta.env.BASE_URL;
+
 async function fetchFromApi(): Promise<MdMeta> {
   const res = await fetch("/api/entries");
   return res.json();
 }
 
 async function fetchFromStatic(): Promise<MdMeta> {
-  const res = await fetch(`${import.meta.env.BASE_URL}meta.json`);
+  const res = await fetch(`${base}meta.json`);
   return res.json();
 }
 
-const fetchMeta =
-  import.meta.env.MODE === "production" ? fetchFromStatic : fetchFromApi;
+const fetchMeta = isApi ? fetchFromApi : fetchFromStatic;
 
 export function useMdData() {
   const [data, setData] = useState<MdMeta | null>(null);
@@ -33,7 +41,7 @@ export function useMdData() {
   }, [loadData]);
 
   useEffect(() => {
-    if (import.meta.env.MODE === "production") return;
+    if (!isApi) return;
 
     let ws: WebSocket | null = null;
 
