@@ -1,6 +1,6 @@
 # md-meta-view
 
-[日本語](./docs/README.ja.md)
+[日本語](./docs/README.ja.md) | [Demo](https://shuntatoda.github.io/md-meta-view/)
 
 A CLI tool to browse Markdown files with YAML frontmatter in a browser-based table UI with sorting, filtering, and detail view.
 

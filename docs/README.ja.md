@@ -1,5 +1,7 @@
 # md-meta-view
 
+[English](../README.md) | [Demo](https://shuntatoda.github.io/md-meta-view/)
+
 YAML frontmatter 付きの Markdown ファイルを、ブラウザ上でテーブル表示・フィルター・ソート・閲覧できる CLI ツール。
 
 ## 特徴
