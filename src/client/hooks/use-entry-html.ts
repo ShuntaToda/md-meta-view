@@ -8,7 +8,7 @@ async function fetchFromApi(id: string): Promise<MdEntry | null> {
 }
 
 async function fetchFromStatic(id: string): Promise<MdEntry | null> {
-  const res = await fetch(`/entries/${encodeURIComponent(id)}.json`);
+  const res = await fetch(`${import.meta.env.BASE_URL}entries/${encodeURIComponent(id)}.json`);
   if (!res.ok) return null;
   return res.json();
 }

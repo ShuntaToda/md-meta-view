@@ -7,7 +7,7 @@ async function fetchFromApi(): Promise<MdMeta> {
 }
 
 async function fetchFromStatic(): Promise<MdMeta> {
-  const res = await fetch("/meta.json");
+  const res = await fetch(`${import.meta.env.BASE_URL}meta.json`);
   return res.json();
 }
 

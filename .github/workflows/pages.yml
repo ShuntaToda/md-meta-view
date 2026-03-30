@@ -27,6 +27,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
+        env:
+          VITE_BASE_PATH: /md-meta-view/
       - run: node dist/cli/index.js build ./examples --out ./examples-dist
       - uses: actions/upload-pages-artifact@v3
         with:
