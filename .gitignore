@@ -11,10 +11,7 @@ node_modules
 
 # Build outputs
 dist
-dist-cli
 test-dist
-packages/*/dist
-packages/*/dist-cli
 
 # Test data
 test-docs

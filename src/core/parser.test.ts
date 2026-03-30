@@ -2,7 +2,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { collectFrontmatterKeys, parseDirectory, parseMdFile } from "./parser.js";
 
-const fixturesDir = path.resolve(import.meta.dirname, "../fixtures");
+const fixturesDir = path.resolve(import.meta.dirname, "../../fixtures");
 
 describe("parseMdFile", () => {
   it("extracts frontmatter and renders HTML", async () => {

@@ -4,7 +4,7 @@ import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { loadSettings } from "./settings.js";
 
-const fixturesDir = path.resolve(import.meta.dirname, "../fixtures");
+const fixturesDir = path.resolve(import.meta.dirname, "../../fixtures");
 
 describe("loadSettings", () => {
   it("loads settings from md-meta-view-setting.json", () => {
