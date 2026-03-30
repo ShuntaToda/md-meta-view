@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "composite": true,
+    "strict": true,
+    "outDir": "./dist-cli",
+    "rootDir": "./src"
+  },
+  "include": ["src"]
+}

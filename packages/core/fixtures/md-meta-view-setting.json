@@ -1,0 +1,4 @@
+{
+  "idField": "number",
+  "exclude": ["excluded.md"]
+}
