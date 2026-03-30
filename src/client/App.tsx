@@ -1,4 +1,4 @@
-import type { MdEntry } from "@md-meta-view/core";
+import type { MdEntryMeta } from "@md-meta-view/core";
 import { useCallback, useMemo, useState } from "react";
 import { DataTable, type TableState } from "@/components/data-table";
 import { MarkdownView } from "@/components/markdown-view";
@@ -8,6 +8,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
+import { useEntryHtml } from "@/hooks/use-entry-html";
 import { useMdData } from "@/hooks/use-md-data";
 import { useTheme } from "@/hooks/use-theme";
 import {
@@ -55,7 +56,8 @@ export default function App() {
   const [selectedId, setSelectedId] = useState<string | null>(
     initialSearch.file ?? null,
   );
-  const selected = useMemo(() => {
+
+  const selectedMeta = useMemo(() => {
     if (!selectedId || !data) return null;
     return (
       data.entries.find(
@@ -64,13 +66,17 @@ export default function App() {
     );
   }, [selectedId, data]);
 
+  const { entry: selectedEntry, loading: entryLoading } = useEntryHtml(
+    selectedMeta?.id ?? null,
+  );
+
   const handleTableStateChange = useCallback((state: TableState) => {
     setCurrentTableState(state);
     const params = tableStateToSearchParams(state);
     setSearchParams({ sort: params.sort, filter: params.filter, q: params.q });
   }, []);
 
-  const handleSelect = useCallback((entry: MdEntry) => {
+  const handleSelect = useCallback((entry: MdEntryMeta) => {
     setSelectedId(entry.id);
     setSearchParams({ file: entry.id });
   }, []);
@@ -116,7 +122,7 @@ export default function App() {
         <ThemeToggle />
       </header>
       <ResizablePanelGroup orientation="horizontal" className="flex-1">
-        <ResizablePanel defaultSize={selected ? 50 : 100} minSize={30}>
+        <ResizablePanel defaultSize={selectedId ? 50 : 100} minSize={30}>
           <div className="h-full overflow-auto p-4">
             {hasFilters && (
               <div className="mb-3 flex justify-end">
@@ -133,18 +139,27 @@ export default function App() {
               entries={data.entries}
               keys={data.keys}
               onSelect={handleSelect}
-              selectedId={selected?.id}
+              selectedId={selectedMeta?.id}
               tableState={currentTableState}
               onTableStateChange={handleTableStateChange}
             />
           </div>
         </ResizablePanel>
-        {selected && (
+        {selectedId && (
           <>
             <ResizableHandle withHandle />
             <ResizablePanel defaultSize={50} minSize={20}>
               <div className="h-full overflow-auto p-4">
-                <MarkdownView entry={selected} onClose={handleClose} />
+                {entryLoading ? (
+                  <p className="text-muted-foreground">Loading...</p>
+                ) : selectedEntry ? (
+                  <MarkdownView
+                    entry={selectedEntry}
+                    onClose={handleClose}
+                  />
+                ) : (
+                  <p className="text-muted-foreground">Entry not found.</p>
+                )}
               </div>
             </ResizablePanel>
           </>

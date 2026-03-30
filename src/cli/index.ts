@@ -3,6 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { cac } from "cac";
+import { getPackageVersion } from "./utils.js";
 import {
   collectFrontmatterKeys,
   parseDirectory,
@@ -50,14 +51,31 @@ cli
 
     fs.cpSync(clientPath, absOutDir, { recursive: true });
 
-    const dataJson = JSON.stringify({ entries, keys, settings });
-    fs.writeFileSync(path.join(absOutDir, "data.json"), dataJson, "utf-8");
+    // Write meta.json (frontmatter only, no html)
+    const meta = entries.map(({ html: _, ...rest }) => rest);
+    fs.writeFileSync(
+      path.join(absOutDir, "meta.json"),
+      JSON.stringify({ entries: meta, keys, settings }),
+      "utf-8",
+    );
+
+    // Write individual entry files with html
+    const entriesDir = path.join(absOutDir, "entries");
+    fs.mkdirSync(entriesDir, { recursive: true });
+    for (const entry of entries) {
+      const filename = `${encodeURIComponent(entry.id)}.json`;
+      fs.writeFileSync(
+        path.join(entriesDir, filename),
+        JSON.stringify(entry),
+        "utf-8",
+      );
+    }
 
     console.log(`\nBuild complete: ${absOutDir}`);
   });
 
 cli.help();
-cli.version("0.2.0");
+cli.version(getPackageVersion());
 
 try {
   cli.parse(process.argv, { run: false });

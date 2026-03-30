@@ -45,7 +45,7 @@ Scans Markdown files in the specified directory (default: current directory) and
 md-meta-view build [dir] [--out <dir>]
 ```
 
-Outputs static HTML/JS/CSS + `data.json`. Serve with any HTTP server.
+Outputs static HTML/JS/CSS + `meta.json` + `entries/*.json`. Serve with any HTTP server.
 
 ```bash
 # Preview the build output
@@ -106,21 +106,21 @@ Frontmatter fields are auto-detected as table columns. Arrays and objects are di
 
 ## Project Structure
 
-Monorepo with 3 packages:
-
 ```
-packages/
-  core/    # @md-meta-view/core  — Types, MD parser, settings loader
-  cli/     # md-meta-view        — CLI entry, dev server, build command
-  web/     # @md-meta-view/web   — React frontend
+src/
+  cli/       # CLI entry point (cac)
+  server/    # Hono server (API + static file serving)
+  core/      # Types, markdown parser, settings loader
+  client/    # React frontend (built by Vite)
 ```
 
 ## Tech Stack
 
-- **CLI**: [cac](https://github.com/cacjs/cac), [chokidar](https://github.com/paulmillr/chokidar), [Vite](https://vite.dev/)
+- **Server**: [Hono](https://hono.dev/), [chokidar](https://github.com/paulmillr/chokidar)
+- **CLI**: [cac](https://github.com/cacjs/cac)
 - **Markdown**: [gray-matter](https://github.com/jonschlinkert/gray-matter), [unified](https://unifiedjs.com/) (remark + rehype)
-- **Frontend**: [React](https://react.dev/), [TanStack Table](https://tanstack.com/table), [TanStack Router](https://tanstack.com/router), [shadcn/ui](https://ui.shadcn.com/), [Tailwind CSS](https://tailwindcss.com/)
-- **Tooling**: [pnpm](https://pnpm.io/) workspaces, [Biome](https://biomejs.dev/), [esbuild](https://esbuild.github.io/)
+- **Frontend**: [React](https://react.dev/), [TanStack Table](https://tanstack.com/table), [shadcn/ui](https://ui.shadcn.com/), [Tailwind CSS](https://tailwindcss.com/)
+- **Tooling**: [Vite](https://vite.dev/), [Biome](https://biomejs.dev/), [Vitest](https://vitest.dev/)
 
 ## Development
 
@@ -128,12 +128,14 @@ packages/
 # Install dependencies
 pnpm install
 
-# Build all packages + start dev server
+# Build and start dev server
 pnpm dev
 
-# Build individual packages
-pnpm --filter @md-meta-view/core build
-pnpm --filter md-meta-view build
+# Build for production
+pnpm build
+
+# Run tests
+pnpm test
 
 # Lint & Format
 pnpm lint

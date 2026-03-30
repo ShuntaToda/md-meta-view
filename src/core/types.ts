@@ -6,13 +6,20 @@ export interface MdEntry {
   html: string;
 }
 
+export interface MdEntryMeta {
+  id: string;
+  filename: string;
+  relativePath: string;
+  frontmatter: Record<string, unknown>;
+}
+
 export interface Settings {
   idField?: string;
   exclude?: string[];
 }
 
-export interface MdData {
-  entries: MdEntry[];
+export interface MdMeta {
+  entries: MdEntryMeta[];
   keys: string[];
   settings: Settings;
 }

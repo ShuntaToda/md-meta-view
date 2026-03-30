@@ -7,14 +7,16 @@ import { watch } from "chokidar";
 import { Hono } from "hono";
 import open from "open";
 import { WebSocketServer } from "ws";
-import {
-  collectFrontmatterKeys,
-  parseDirectory,
-} from "../core/parser.js";
+import { collectFrontmatterKeys, parseDirectory } from "../core/parser.js";
 import { loadSettings } from "../core/settings.js";
-import type { MdEntry, Settings } from "../core/types.js";
+import type { MdEntry, MdEntryMeta, Settings } from "../core/types.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+function toMeta(entry: MdEntry): MdEntryMeta {
+  const { html: _, ...meta } = entry;
+  return meta;
+}
 
 interface ServerState {
   entries: MdEntry[];
@@ -40,8 +42,25 @@ export async function startServer(targetDir: string, port: number) {
 
   const app = new Hono();
 
-  // API
-  app.get("/api/entries", (c) => c.json(state));
+  // API: meta only (no html)
+  app.get("/api/entries", (c) =>
+    c.json({
+      entries: state.entries.map(toMeta),
+      keys: state.keys,
+      settings: state.settings,
+    }),
+  );
+
+  // API: individual entry with html
+  app.get("/api/entries/:id", (c) => {
+    const id = decodeURIComponent(c.req.param("id"));
+    const entry = state.entries.find(
+      (e) => e.id === id || e.relativePath === id,
+    );
+    if (!entry) return c.json({ error: "Not found" }, 404);
+    return c.json(entry);
+  });
+
   app.get("/api/ws-port", (c) => c.json({ port: port + 1 }));
 
   // Serve built client
@@ -49,7 +68,10 @@ export async function startServer(targetDir: string, port: number) {
   if (fs.existsSync(clientPath)) {
     app.use("/*", serveStatic({ root: clientPath }));
     app.get("*", (c) => {
-      const html = fs.readFileSync(path.join(clientPath, "index.html"), "utf-8");
+      const html = fs.readFileSync(
+        path.join(clientPath, "index.html"),
+        "utf-8",
+      );
       return c.html(html);
     });
   }
@@ -67,7 +89,14 @@ export async function startServer(targetDir: string, port: number) {
   const broadcastUpdate = async () => {
     state.entries = await parseDirectory(absTargetDir, settings);
     state.keys = collectFrontmatterKeys(state.entries);
-    const message = JSON.stringify({ type: "update", data: state });
+    const message = JSON.stringify({
+      type: "update",
+      data: {
+        entries: state.entries.map(toMeta),
+        keys: state.keys,
+        settings: state.settings,
+      },
+    });
     for (const client of wss.clients) {
       if (client.readyState === 1) {
         client.send(message);

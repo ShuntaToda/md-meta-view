@@ -1,29 +1,26 @@
-import type { MdData } from "@md-meta-view/core";
+import type { MdMeta } from "@md-meta-view/core";
 import { useCallback, useEffect, useState } from "react";
 
 export function useMdData() {
-  const [data, setData] = useState<MdData | null>(null);
+  const [data, setData] = useState<MdMeta | null>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchData = useCallback(async () => {
     try {
       const res = await fetch("/api/entries");
       if (res.ok) {
-        const json = await res.json();
-        setData(json);
+        setData(await res.json());
       } else {
-        const staticRes = await fetch("/data.json");
+        const staticRes = await fetch("/meta.json");
         if (staticRes.ok) {
-          const json = await staticRes.json();
-          setData(json);
+          setData(await staticRes.json());
         }
       }
     } catch {
       try {
-        const staticRes = await fetch("/data.json");
+        const staticRes = await fetch("/meta.json");
         if (staticRes.ok) {
-          const json = await staticRes.json();
-          setData(json);
+          setData(await staticRes.json());
         }
       } catch {
         console.error("Failed to load data");

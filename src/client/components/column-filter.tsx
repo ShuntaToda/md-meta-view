@@ -1,11 +1,11 @@
-import type { MdEntry } from "@md-meta-view/core";
+import type { MdEntryMeta } from "@md-meta-view/core";
 import type { Column } from "@tanstack/react-table";
 import { useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 
 interface ColumnFilterProps {
-  column: Column<MdEntry>;
+  column: Column<MdEntryMeta>;
 }
 
 function formatCellValue(value: unknown): string {

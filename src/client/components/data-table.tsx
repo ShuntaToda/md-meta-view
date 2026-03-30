@@ -1,4 +1,4 @@
-import type { MdEntry } from "@md-meta-view/core";
+import type { MdEntryMeta } from "@md-meta-view/core";
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -39,9 +39,9 @@ export interface TableState {
 }
 
 interface DataTableProps {
-  entries: MdEntry[];
+  entries: MdEntryMeta[];
   keys: string[];
-  onSelect: (entry: MdEntry) => void;
+  onSelect: (entry: MdEntryMeta) => void;
   selectedId?: string;
   tableState?: TableState;
   onTableStateChange?: (state: TableState) => void;
@@ -85,8 +85,8 @@ export function DataTable({
     }
   };
 
-  const columns = useMemo<ColumnDef<MdEntry>[]>(() => {
-    const cols: ColumnDef<MdEntry>[] = [
+  const columns = useMemo<ColumnDef<MdEntryMeta>[]>(() => {
+    const cols: ColumnDef<MdEntryMeta>[] = [
       {
         accessorKey: "relativePath",
         header: "File",
