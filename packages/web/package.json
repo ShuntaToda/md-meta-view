@@ -1,7 +1,21 @@
 {
   "name": "@md-meta-view/web",
   "version": "0.1.0",
+  "description": "Web frontend for md-meta-view",
   "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ShuntaToda/md-meta-view.git",
+    "directory": "packages/web"
+  },
+  "files": [
+    "src",
+    "index.html",
+    "vite.config.ts",
+    "components.json",
+    "tsconfig.json"
+  ],
   "exports": {
     "./package.json": "./package.json"
   },
