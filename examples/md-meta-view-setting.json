@@ -1,0 +1,4 @@
+{
+  "idField": "id",
+  "exclude": ["**/README.md"]
+}
