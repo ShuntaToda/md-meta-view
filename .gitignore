@@ -12,6 +12,7 @@ node_modules
 # Build outputs
 dist
 test-dist
+examples-dist
 
 # Test data
 test-docs
