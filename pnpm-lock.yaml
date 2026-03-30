@@ -75,6 +75,12 @@ importers:
       '@types/picomatch':
         specifier: ^4.0.2
         version: 4.0.2
+      '@types/react':
+        specifier: ^19.2.14
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: ^19.2.3
+        version: 19.2.3(@types/react@19.2.14)
       '@types/ws':
         specifier: ^8.18.1
         version: 8.18.1
@@ -882,6 +888,11 @@ packages:
 
   '@types/picomatch@4.0.2':
     resolution: {integrity: sha512-qHHxQ+P9PysNEGbALT8f8YOSHW0KJu6l2xU8DYY0fu/EmGxXdVnuTLvFUvBgPJMSqXq29SYHveejeAha+4AYgA==}
+
+  '@types/react-dom@19.2.3':
+    resolution: {integrity: sha512-jp2L/eY6fn+KgVVQAOqYItbF0VY/YApe5Mz2F0aykSO8gx31bYCZyvSeYxCHKvzHG5eZjc+zyaS5BrBWya2+kQ==}
+    peerDependencies:
+      '@types/react': ^19.2.0
 
   '@types/react@19.2.14':
     resolution: {integrity: sha512-ilcTH/UniCkMdtexkoCN0bI7pMcJDvmQFPvuPvmEaYA/NSfFTAgdUSLAoVjaRJm7+6PvcM+q1zYOwS4wTYMF9w==}
@@ -3336,10 +3347,13 @@ snapshots:
 
   '@types/picomatch@4.0.2': {}
 
+  '@types/react-dom@19.2.3(@types/react@19.2.14)':
+    dependencies:
+      '@types/react': 19.2.14
+
   '@types/react@19.2.14':
     dependencies:
       csstype: 3.2.3
-    optional: true
 
   '@types/statuses@2.0.6': {}
 
@@ -3583,8 +3597,7 @@ snapshots:
 
   cssesc@3.0.0: {}
 
-  csstype@3.2.3:
-    optional: true
+  csstype@3.2.3: {}
 
   data-uri-to-buffer@4.0.1: {}
 

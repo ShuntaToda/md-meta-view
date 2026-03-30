@@ -1,40 +1,40 @@
 import type { MdMeta } from "@md-meta-view/core";
 import { useCallback, useEffect, useState } from "react";
 
+async function fetchFromApi(): Promise<MdMeta> {
+  const res = await fetch("/api/entries");
+  return res.json();
+}
+
+async function fetchFromStatic(): Promise<MdMeta> {
+  const res = await fetch("/meta.json");
+  return res.json();
+}
+
+const fetchMeta =
+  import.meta.env.MODE === "production" ? fetchFromStatic : fetchFromApi;
+
 export function useMdData() {
   const [data, setData] = useState<MdMeta | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchData = useCallback(async () => {
+  const loadData = useCallback(async () => {
     try {
-      const res = await fetch("/api/entries");
-      if (res.ok) {
-        setData(await res.json());
-      } else {
-        const staticRes = await fetch("/meta.json");
-        if (staticRes.ok) {
-          setData(await staticRes.json());
-        }
-      }
+      setData(await fetchMeta());
     } catch {
-      try {
-        const staticRes = await fetch("/meta.json");
-        if (staticRes.ok) {
-          setData(await staticRes.json());
-        }
-      } catch {
-        console.error("Failed to load data");
-      }
+      console.error("Failed to load data");
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    loadData();
+  }, [loadData]);
 
   useEffect(() => {
+    if (import.meta.env.MODE === "production") return;
+
     let ws: WebSocket | null = null;
 
     const connectWs = async () => {
@@ -53,7 +53,7 @@ export function useMdData() {
           setTimeout(connectWs, 2000);
         };
       } catch {
-        // Static build mode, no WebSocket
+        // No WebSocket available
       }
     };
 
