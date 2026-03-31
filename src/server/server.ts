@@ -75,10 +75,7 @@ export async function startServer(targetDir: string, port: number) {
       '<head><script>window.__MD_META_VIEW_MODE__="api"</script>',
     );
 
-    app.use(
-      "/assets/*",
-      serveStatic({ root: clientPath }),
-    );
+    app.use("/assets/*", serveStatic({ root: clientPath }));
     app.get("*", (c) => c.html(injectedHtml));
   }
 

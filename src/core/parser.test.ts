@@ -1,6 +1,10 @@
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { collectFrontmatterKeys, parseDirectory, parseMdFile } from "./parser.js";
+import {
+  collectFrontmatterKeys,
+  parseDirectory,
+  parseMdFile,
+} from "./parser.js";
 
 const fixturesDir = path.resolve(import.meta.dirname, "../../fixtures");
 
@@ -21,7 +25,9 @@ describe("parseMdFile", () => {
 
   it("uses idField from settings when available", async () => {
     const filePath = path.join(fixturesDir, "basic.md");
-    const entry = await parseMdFile(filePath, fixturesDir, { idField: "number" });
+    const entry = await parseMdFile(filePath, fixturesDir, {
+      idField: "number",
+    });
 
     expect(entry.id).toBe("001");
   });
@@ -35,7 +41,9 @@ describe("parseMdFile", () => {
 
   it("falls back to relativePath when idField is missing from frontmatter", async () => {
     const filePath = path.join(fixturesDir, "no-frontmatter.md");
-    const entry = await parseMdFile(filePath, fixturesDir, { idField: "number" });
+    const entry = await parseMdFile(filePath, fixturesDir, {
+      idField: "number",
+    });
 
     expect(entry.id).toBe("no-frontmatter.md");
   });
@@ -68,7 +76,9 @@ describe("parseDirectory", () => {
   });
 
   it("applies exclude patterns from settings", async () => {
-    const entries = await parseDirectory(fixturesDir, { exclude: ["excluded.md"] });
+    const entries = await parseDirectory(fixturesDir, {
+      exclude: ["excluded.md"],
+    });
 
     const filenames = entries.map((e) => e.filename);
     expect(filenames).not.toContain("excluded.md");
@@ -110,7 +120,13 @@ describe("collectFrontmatterKeys", () => {
 
   it("returns empty array for entries without frontmatter", () => {
     const keys = collectFrontmatterKeys([
-      { id: "1", filename: "a.md", relativePath: "a.md", frontmatter: {}, html: "" },
+      {
+        id: "1",
+        filename: "a.md",
+        relativePath: "a.md",
+        frontmatter: {},
+        html: "",
+      },
     ]);
 
     expect(keys).toEqual([]);

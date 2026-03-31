@@ -64,7 +64,7 @@ export function buildShareUrl(
   search: SearchParams,
   origin = window.location.origin,
 ): string {
-  const url = new URL(origin + "/");
+  const url = new URL(`${origin}/`);
   if (search.sort) url.searchParams.set("sort", search.sort);
   if (search.filter) url.searchParams.set("filter", search.filter);
   if (search.q) url.searchParams.set("q", search.q);

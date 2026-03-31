@@ -3,13 +3,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { cac } from "cac";
-import { getPackageVersion } from "./utils.js";
-import {
-  collectFrontmatterKeys,
-  parseDirectory,
-} from "../core/parser.js";
+import { collectFrontmatterKeys, parseDirectory } from "../core/parser.js";
 import { loadSettings } from "../core/settings.js";
 import { startServer } from "../server/server.js";
+import { getPackageVersion } from "./utils.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 

@@ -13,7 +13,9 @@ describe("searchParamsToTableState", () => {
   });
 
   it("parses multiple sort parameters", () => {
-    const state = searchParamsToTableState({ sort: "fm_date:desc,fm_title:asc" });
+    const state = searchParamsToTableState({
+      sort: "fm_date:desc,fm_title:asc",
+    });
 
     expect(state.sorting).toEqual([
       { id: "fm_date", desc: true },
@@ -24,7 +26,9 @@ describe("searchParamsToTableState", () => {
   it("parses filter parameter", () => {
     const state = searchParamsToTableState({ filter: "fm_category:testing" });
 
-    expect(state.columnFilters).toEqual([{ id: "fm_category", value: "testing" }]);
+    expect(state.columnFilters).toEqual([
+      { id: "fm_category", value: "testing" },
+    ]);
   });
 
   it("parses multiple filter parameters", () => {
@@ -39,7 +43,9 @@ describe("searchParamsToTableState", () => {
   });
 
   it("handles filter values containing colons", () => {
-    const state = searchParamsToTableState({ filter: "fm_url:https://example.com" });
+    const state = searchParamsToTableState({
+      filter: "fm_url:https://example.com",
+    });
 
     expect(state.columnFilters).toEqual([
       { id: "fm_url", value: "https://example.com" },

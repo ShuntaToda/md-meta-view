@@ -10,13 +10,6 @@
     "outDir": "./dist",
     "rootDir": "./src"
   },
-  "include": [
-    "src/cli/**/*",
-    "src/server/**/*",
-    "src/core/**/*"
-  ],
-  "exclude": [
-    "src/client/**/*",
-    "**/*.test.ts"
-  ]
+  "include": ["src/cli/**/*", "src/server/**/*", "src/core/**/*"],
+  "exclude": ["src/client/**/*", "**/*.test.ts"]
 }

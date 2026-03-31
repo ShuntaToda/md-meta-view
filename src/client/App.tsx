@@ -2,6 +2,7 @@ import type { MdEntryMeta } from "@md-meta-view/core";
 import { useCallback, useMemo, useState } from "react";
 import { DataTable, type TableState } from "@/components/data-table";
 import { MarkdownView } from "@/components/markdown-view";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import {
   ResizableHandle,
@@ -16,7 +17,6 @@ import {
   searchParamsToTableState,
   tableStateToSearchParams,
 } from "@/lib/search-params";
-import { ThemeToggle } from "@/components/theme-toggle";
 
 function getSearchParams() {
   const params = new URLSearchParams(window.location.search);
@@ -153,10 +153,7 @@ export default function App() {
                 {entryLoading ? (
                   <p className="text-muted-foreground">Loading...</p>
                 ) : selectedEntry ? (
-                  <MarkdownView
-                    entry={selectedEntry}
-                    onClose={handleClose}
-                  />
+                  <MarkdownView entry={selectedEntry} onClose={handleClose} />
                 ) : (
                   <p className="text-muted-foreground">Entry not found.</p>
                 )}
