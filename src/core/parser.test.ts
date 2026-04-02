@@ -32,20 +32,21 @@ describe("parseMdFile", () => {
     expect(entry.id).toBe("001");
   });
 
-  it("falls back to relativePath when idField is not set", async () => {
+  it("uses frontmatter id field by default when idField is not set", async () => {
     const filePath = path.join(fixturesDir, "basic.md");
     const entry = await parseMdFile(filePath, fixturesDir, {});
 
-    expect(entry.id).toBe("basic.md");
+    // basic.md has no "id" field, falls back to filename
+    expect(entry.id).toBe("basic");
   });
 
-  it("falls back to relativePath when idField is missing from frontmatter", async () => {
+  it("falls back to filename when idField is missing from frontmatter", async () => {
     const filePath = path.join(fixturesDir, "no-frontmatter.md");
     const entry = await parseMdFile(filePath, fixturesDir, {
       idField: "number",
     });
 
-    expect(entry.id).toBe("no-frontmatter.md");
+    expect(entry.id).toBe("no-frontmatter");
   });
 
   it("handles files without frontmatter", async () => {
@@ -102,7 +103,7 @@ describe("parseDirectory", () => {
 
     expect(basic?.id).toBe("001");
     expect(nested?.id).toBe("002");
-    expect(noFm?.id).toBe("no-frontmatter.md");
+    expect(noFm?.id).toBe("no-frontmatter");
   });
 });
 

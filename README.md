@@ -4,6 +4,17 @@
 
 A CLI tool to browse Markdown files with YAML frontmatter in a browser-based table UI with sorting, filtering, and detail view.
 
+<!-- TODO: Add screenshot -->
+<!-- ![screenshot](./docs/screenshot.png) -->
+
+## Use Cases
+
+- **Architecture Decision Records (ADR)** — Browse and filter decisions by date, status, category
+- **Meeting notes** — Search across meeting minutes with frontmatter metadata
+- **Documentation management** — View and navigate any collection of Markdown files with structured metadata
+- **Knowledge base** — Quick lookup and sharing of internal documents
+- **Blog posts / content** — Preview and manage Markdown-based content with frontmatter
+
 ## Features
 
 - **Table view** — Auto-detects frontmatter fields and displays them as columns
@@ -37,7 +48,7 @@ npx md-meta-view build --out ./dist
 md-meta-view [dir] [--port <port>]
 ```
 
-Scans Markdown files in the specified directory (default: current directory) and opens a browser UI. File changes are automatically reflected.
+Scans Markdown files in the specified directory (default: current directory) and opens a browser UI. File changes are automatically reflected via WebSocket.
 
 ### Build mode
 
@@ -51,6 +62,55 @@ Outputs static HTML/JS/CSS + `meta.json` + `entries/*.json`. Serve with any HTTP
 # Preview the build output
 npx serve ./dist
 ```
+
+## Feature Details
+
+### Table View
+
+- **Auto-detected columns** — All frontmatter fields across your Markdown files are automatically discovered and shown as table columns
+- **Column visibility** — Toggle columns on/off via the "Columns" dropdown
+- **Pagination** — 50 items per page with Previous/Next navigation
+- **File path column** — Shows the relative path for files in subdirectories
+
+### Sort & Filter
+
+- **Column sorting** — Click any column header to sort. Click again to reverse. Supports multi-column sort
+- **Column filter** — Click the ▼ icon on a column header to open a filter popover. Type to search, or click a value badge for one-click filtering
+- **Global search** — Full-text search across all columns
+- **Active filter display** — Active sort and filter conditions are shown as badges in the toolbar. Click ✕ to remove individual conditions
+- **Clear all** — "Clear filters" button removes all active filters at once
+
+### Detail Panel
+
+- **Split view** — Selecting a row opens a resizable right panel with the rendered Markdown content
+- **Frontmatter table** — Metadata is displayed as a key-value table at the top of the detail panel
+- **Inline Markdown** — Frontmatter values are rendered as Markdown (links like `[text](url)` become clickable)
+- **Click to copy** — Click any frontmatter value to copy it to the clipboard
+- **Copy Link** — Generates a shareable URL with `?file=` parameter pointing to the selected file
+- **Syntax highlighting** — Code blocks in Markdown are syntax-highlighted
+
+### Share View
+
+When filters or sort conditions are active, a "Share View" button appears. Clicking it copies the current URL with all filter/sort parameters, allowing you to share a specific view with your team.
+
+Example shared URL:
+```
+https://example.com/?sort=fm_date:desc&filter=fm_category:tech-selection&q=React
+```
+
+### Dark Mode
+
+Toggle between Light, Dark, and System mode by clicking the theme button in the header. The preference is saved to `localStorage` and persists across sessions.
+
+### Live Reload
+
+In dev mode (`md-meta-view [dir]`), the server watches for file changes using [chokidar](https://github.com/paulmillr/chokidar):
+
+- **Add** — New `.md` files are automatically detected
+- **Change** — Modified files are re-parsed and the table updates
+- **Delete** — Removed files disappear from the table
+
+Updates are pushed to the browser via WebSocket — no manual refresh needed.
 
 ## Settings
 
@@ -91,10 +151,14 @@ Targets Markdown files with YAML frontmatter. Recursively scans subdirectories u
 
 ```markdown
 ---
-number: "20260320-001"
+id: "20260320-001"
 title: "Adopt Next.js as framework"
 date: 2026-03-20
 category: tech-selection
+deciders:
+  - Alice
+  - Bob
+status: accepted
 ---
 
 # Adopt Next.js as framework
@@ -102,14 +166,32 @@ category: tech-selection
 Body content goes here...
 ```
 
-Frontmatter fields are auto-detected as table columns. Arrays and objects are displayed as comma-separated or JSON strings.
+- Frontmatter fields are auto-detected as table columns
+- Arrays (e.g. `deciders`) are displayed as comma-separated values
+- Objects are displayed as JSON strings
+- Dates are sortable
+- Files without frontmatter are included with an empty metadata row
+
+## Deploy to GitHub Pages
+
+You can host a static build on GitHub Pages. See [`.github/workflows/pages.yml`](./.github/workflows/pages.yml) for a working example.
+
+Key points:
+- Set `VITE_BASE_PATH` to `/<your-repo-name>/` so assets load correctly on GitHub Pages
+- Go to your repository's **Settings > Pages** and set Source to **GitHub Actions**
+
+## Limitations
+
+- **Max depth**: Scans subdirectories up to 5 levels deep
+- **file:// protocol**: Static builds require an HTTP server; opening `index.html` directly via `file://` will not work (fetch API restriction)
+- **Large datasets**: For thousands of files, initial load may be slow. Metadata and HTML content are split into separate files (`meta.json` + `entries/*.json`) to mitigate this
 
 ## Project Structure
 
 ```
 src/
   cli/       # CLI entry point (cac)
-  server/    # Hono server (API + static file serving)
+  server/    # Hono server (API + static file serving + WebSocket)
   core/      # Types, markdown parser, settings loader
   client/    # React frontend (built by Vite)
 ```
@@ -141,6 +223,10 @@ pnpm test
 pnpm lint
 pnpm format
 ```
+
+## Contributing
+
+Contributions are welcome! Please open an issue or pull request.
 
 ## License
 

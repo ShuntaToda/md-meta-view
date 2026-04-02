@@ -53,10 +53,11 @@ export async function parseMdFile(
   const result = await markdownProcessor.process(content);
 
   const relativePath = path.relative(baseDir, filePath);
+  const idFieldKey = settings.idField || "id";
   const id =
-    settings.idField && data[settings.idField] != null
-      ? String(data[settings.idField])
-      : relativePath;
+    data[idFieldKey] != null
+      ? String(data[idFieldKey])
+      : path.basename(filePath, ".md");
 
   return {
     id,
