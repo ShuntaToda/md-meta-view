@@ -1,6 +1,6 @@
 {
   "name": "md-meta-view",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "A CLI tool to browse Markdown files with YAML frontmatter in a browser-based table UI",
   "type": "module",
   "license": "MIT",
