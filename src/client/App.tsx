@@ -24,7 +24,7 @@ function getSearchParams() {
     sort: params.get("sort") || undefined,
     filter: params.get("filter") || undefined,
     q: params.get("q") || undefined,
-    file: params.get("file") || undefined,
+    file: params.get("id") || undefined,
   };
 }
 

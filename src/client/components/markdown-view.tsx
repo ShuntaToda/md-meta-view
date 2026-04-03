@@ -56,7 +56,7 @@ export function MarkdownView({ entry, onClose }: MarkdownViewProps) {
 
   const handleCopyLink = async () => {
     const url = new URL(`${window.location.origin}/`);
-    url.searchParams.set("file", entry.id);
+    url.searchParams.set("id", entry.id);
     await navigator.clipboard.writeText(url.toString());
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
